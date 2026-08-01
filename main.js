@@ -69,9 +69,13 @@ class SearchModal extends Modal {
             if (typeof pulled.content === "string") {
               await this.plugin.writePulledFile(pulled.vault_path, pulled.content);
             }
-            await this.app.workspace.openLinkText(pulled.vault_path, "", false);
+            const pulledFile = this.app.vault.getAbstractFileByPath(normalizePath(pulled.vault_path));
+            if (!(pulledFile instanceof TFile)) throw new Error("Pulled note is not available in the active vault yet");
+            await this.app.workspace.getLeaf(true).openFile(pulledFile);
           } else {
-            await this.app.workspace.openLinkText(result.path, "", false);
+            const localFile = this.app.vault.getAbstractFileByPath(normalizePath(result.path));
+            if (!(localFile instanceof TFile)) throw new Error("Note is not available in the active vault");
+            await this.app.workspace.getLeaf(true).openFile(localFile);
           }
           this.close();
         } catch (error) {
