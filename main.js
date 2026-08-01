@@ -66,6 +66,9 @@ class SearchModal extends Modal {
         try {
           if (result.source === "archive") {
             const pulled = await this.plugin.pullArchive(result.id);
+            if (typeof pulled.content === "string") {
+              await this.plugin.writePulledFile(pulled.vault_path, pulled.content);
+            }
             await this.app.workspace.openLinkText(pulled.vault_path, "", false);
           } else {
             await this.app.workspace.openLinkText(result.path, "", false);
@@ -140,6 +143,17 @@ module.exports = class GBrainArchiveBridge extends Plugin {
 
   async pullArchive(id) {
     return this.request("/api/archive/pull", { method: "POST", body: { id, overwrite: true } });
+  }
+
+  async writePulledFile(path, content) {
+    const normalized = normalizePath(path);
+    const parts = normalized.split("/");
+    let folder = "";
+    for (const part of parts.slice(0, -1)) {
+      folder = folder ? `${folder}/${part}` : part;
+      if (!(await this.app.vault.adapter.exists(folder))) await this.app.vault.adapter.mkdir(folder);
+    }
+    await this.app.vault.adapter.write(normalized, content);
   }
 
   async request(path, options = {}) {
