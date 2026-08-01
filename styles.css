@@ -1,0 +1,5 @@
+.gbrain-archive-modal { max-width: 760px; }
+.gbrain-archive-modal input { width: 100%; margin-bottom: 10px; }
+.gbrain-archive-status, .gbrain-archive-path, .gbrain-archive-snippet { color: var(--text-muted); font-size: var(--font-smaller); }
+.gbrain-archive-result { border-top: 1px solid var(--background-modifier-border); padding: 10px 0; }
+.gbrain-archive-result button { margin-top: 6px; }

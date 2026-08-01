@@ -1,0 +1,9 @@
+{
+  "id": "gbrain-archive-bridge",
+  "name": "GBrain Archive Bridge",
+  "version": "0.1.0",
+  "minAppVersion": "1.5.0",
+  "description": "Search the active vault and the read-only GBrain archive, then pull archive notes into the active vault.",
+  "author": "JV2",
+  "isDesktopOnly": false
+}
