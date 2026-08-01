@@ -60,12 +60,13 @@ class SearchModal extends Modal {
       row.createEl("strong", { text: result.title || result.path });
       row.createDiv({ text: `${result.source}: ${result.path}`, cls: "gbrain-archive-path" });
       if (result.snippet) row.createDiv({ text: result.snippet, cls: "gbrain-archive-snippet" });
-      const button = row.createEl("button", { text: result.source === "archive" ? "Pull and open" : "Open" });
+      const button = row.createEl("button", { text: result.source === "archive" ? "Pull and open" : result.archiveId ? "Refresh and open" : "Open" });
       button.addEventListener("click", async () => {
         button.disabled = true;
         try {
-          if (result.source === "archive") {
-            const pulled = await this.plugin.pullArchive(result.id);
+          const archiveId = result.source === "archive" ? result.id : result.archiveId;
+          if (archiveId) {
+            const pulled = await this.plugin.pullArchive(archiveId);
             if (!String(pulled.vault_path || "").toLowerCase().endsWith(".md")) {
               throw new Error("Archive server did not return an Obsidian Markdown note");
             }
@@ -137,10 +138,23 @@ module.exports = class GBrainArchiveBridge extends Plugin {
         if (index < 0) continue;
         snippet = text.slice(Math.max(0, index - 100), index + 300).replace(/\s+/g, " ");
       }
-      results.push({ source: "active vault", title: file.basename, path: file.path, snippet });
+      results.push({
+        source: file.path.startsWith("Pulled from Archive/") ? "active archive copy" : "active vault",
+        title: file.basename,
+        path: file.path,
+        snippet,
+        archiveId: this.archiveIdForPulledPath(file.path)
+      });
       if (results.length >= this.settings.limit) break;
     }
     return results;
+  }
+
+  archiveIdForPulledPath(path) {
+    const prefix = "Pulled from Archive/";
+    if (!path.startsWith(prefix)) return null;
+    const relative = path.slice(prefix.length);
+    return /\.(csv|json|txt|markdown)\.md$/i.test(relative) ? relative.slice(0, -3) : relative;
   }
 
   async searchArchive(query) {
