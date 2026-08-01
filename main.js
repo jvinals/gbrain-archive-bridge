@@ -66,6 +66,9 @@ class SearchModal extends Modal {
         try {
           if (result.source === "archive") {
             const pulled = await this.plugin.pullArchive(result.id);
+            if (!String(pulled.vault_path || "").toLowerCase().endsWith(".md")) {
+              throw new Error("Archive server did not return an Obsidian Markdown note");
+            }
             if (typeof pulled.content === "string") {
               await this.plugin.writePulledFile(pulled.vault_path, pulled.content);
             }
