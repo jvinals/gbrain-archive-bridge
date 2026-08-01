@@ -155,9 +155,11 @@ module.exports = class GBrainArchiveBridge extends Plugin {
     let folder = "";
     for (const part of parts.slice(0, -1)) {
       folder = folder ? `${folder}/${part}` : part;
-      if (!(await this.app.vault.adapter.exists(folder))) await this.app.vault.adapter.mkdir(folder);
+      if (!this.app.vault.getAbstractFileByPath(folder)) await this.app.vault.createFolder(folder);
     }
-    await this.app.vault.adapter.write(normalized, content);
+    const existing = this.app.vault.getAbstractFileByPath(normalized);
+    if (existing instanceof TFile) await this.app.vault.modify(existing, content);
+    else await this.app.vault.create(normalized, content);
   }
 
   async request(path, options = {}) {
