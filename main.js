@@ -139,7 +139,7 @@ module.exports = class GBrainArchiveBridge extends Plugin {
   }
 
   async pullArchive(id) {
-    return this.request("/api/archive/pull", { method: "POST", body: { id } });
+    return this.request("/api/archive/pull", { method: "POST", body: { id, overwrite: true } });
   }
 
   async request(path, options = {}) {
