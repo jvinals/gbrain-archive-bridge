@@ -1,5 +1,17 @@
-.gbrain-archive-modal { max-width: 760px; }
-.gbrain-archive-modal input { width: 100%; margin-bottom: 10px; }
+.gbrain-archive-modal { width: 100%; max-width: 760px; box-sizing: border-box; }
+.gbrain-archive-modal h2 { margin: 0 0 14px; }
+.gbrain-archive-modal input[type="search"] {
+  display: block;
+  width: 100%;
+  max-width: none;
+  min-height: 44px;
+  box-sizing: border-box;
+  margin: 0 0 14px;
+  padding: 10px 14px;
+}
+.gbrain-archive-status { margin: 0 0 4px; }
 .gbrain-archive-status, .gbrain-archive-path, .gbrain-archive-snippet { color: var(--text-muted); font-size: var(--font-smaller); }
-.gbrain-archive-result { border-top: 1px solid var(--background-modifier-border); padding: 10px 0; }
-.gbrain-archive-result button { margin-top: 6px; }
+.gbrain-archive-result { border-top: 1px solid var(--background-modifier-border); padding: 14px 0 16px; }
+.gbrain-archive-result strong { display: block; margin-bottom: 4px; }
+.gbrain-archive-path, .gbrain-archive-snippet { overflow-wrap: anywhere; }
+.gbrain-archive-result button { margin-top: 10px; min-height: 40px; }
